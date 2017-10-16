@@ -1,0 +1,24 @@
+{
+  "name": "chat-app",
+  "version": "0.1.0",
+  "description": "ChattingApp",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/modern-js/chat-app.git"
+  },
+  "author": "Jimsher Skhirtladze",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/modern-js/chat-app/issues"
+  },
+  "homepage": "https://github.com/modern-js/chat-app#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "jquery": "^3.2.1"
+  }
+}
