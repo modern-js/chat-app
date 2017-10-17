@@ -1,7 +1,8 @@
 const fakeUser = function(username, password='password') {
   return {
     username,
-    password
+    password,
+    unread: new Set()
   }
 }
 

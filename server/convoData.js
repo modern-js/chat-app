@@ -1,10 +1,16 @@
 const fs = require('fs');
+const userData = require('./userData');
+const users = userData.userList;
 
 const userLog = function(username) { return './server/convos/'+username; };
 
 const post = function(sender, target, message) {
   let stamp = + new Date();
   let line = stamp+";"+sender+";"+target+";"+message+"\n";
+  for (let i in users)
+    if ( users[i].username === target ) users[i].unread.add(sender);
+    else if ( users[i].username === sender ) users[i].unread.add(target);
+
   fs.writeFile(userLog(sender), line, {'flag':'a'}, (err)=>{});
   if (sender!=target)
     fs.writeFile(userLog(target), line, {'flag':'a'}, (err)=>{});
@@ -40,7 +46,19 @@ const conversation = function(sender, target) {
   return relevant;
 }
 
+const seen = function(target, sender) {
+  for (let i in users)
+    if ( users[i].username === target ) users[i].unread.delete(sender);
+}
+
+const notifications = function(target) {
+  for (let i in users)
+    if ( users[i].username === target ) return Array.from(users[i].unread);
+}
+
 module.exports = {
   post,
-  conversation
+  conversation,
+  seen,
+  notifications
 };

@@ -57,4 +57,17 @@ api.get('/convo', (req,res) => {
   }));
 });
 
+api.post('/seen', (req,res) => {
+  res.setHeader('Content-Type', 'application/json');
+  if (!req.user) return res.send(JSON.stringify({status:'Unauthorized'}));
+  data.seen(target=req.user.username,sender=req.query.username);
+  res.send(JSON.stringify({status:'OK'}));
+});
+
+api.get('/notifications', (req,res) => {
+  res.setHeader('Content-Type', 'application/json');
+  if (!req.user) return res.send(JSON.stringify({status:'Unauthorized'}));
+  res.send(JSON.stringify({status:'OK', notifications: data.notifications(req.user.username)}));
+});
+
 module.exports = api;
