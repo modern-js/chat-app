@@ -3,7 +3,8 @@ const fs = require('fs');
 const userLog = function(username) { return './server/convos/'+username; };
 
 const post = function(sender, target, message) {
-  let line = sender+";"+target+";"+message+"\n";
+  let stamp = + new Date();
+  let line = stamp+";"+sender+";"+target+";"+message+"\n";
   fs.writeFile(userLog(sender), line, {'flag':'a'}, (err)=>{});
   if (sender!=target)
     fs.writeFile(userLog(target), line, {'flag':'a'}, (err)=>{});
@@ -20,6 +21,8 @@ const conversation = function(sender, target) {
 
   for (let i in lines) {
     let line = lines[i];
+    let stamp = line.substr(0,line.indexOf(';'));
+    line = line.substr(line.indexOf(';')+1);
     let lineSender = line.substr(0,line.indexOf(';'));
     line = line.substr(line.indexOf(';')+1);
     let lineTarget = line.substr(0,line.indexOf(';'));
@@ -28,7 +31,8 @@ const conversation = function(sender, target) {
     let convo = {
       sender: lineSender,
       target: lineTarget,
-      message: line
+      message: line,
+      stamp: parseInt(stamp)
     }
     if ((lineSender===target && lineTarget==sender) || (lineTarget===target && lineSender===sender))
       relevant.push(convo);

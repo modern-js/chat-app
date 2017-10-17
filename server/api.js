@@ -27,25 +27,30 @@ api.get('/login',
 
 api.get('/logout', (req, res) => {
   req.logout();
+  res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify({status:'OK'}));
 });
 
 api.get('/test',(req, res) => {
+  res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify({status:'OK'}));
 });
 
 api.get('/me',(req, res) => {
+  res.setHeader('Content-Type', 'application/json');
   if (!req.user) return res.send(JSON.stringify({status:'Unauthorized'}));;
   res.send(JSON.stringify({'user':req.user, status:'OK'}));
 });
 
 api.post('/post', (req,res) => {
+  res.setHeader('Content-Type', 'application/json');
   if (!req.user) return res.send(JSON.stringify({status:'Unauthorized'}));
   data.post(sender=req.user.username,target=req.query.username,message=req.query.text);
   res.send(JSON.stringify({status:'OK'}));
 });
 
 api.get('/convo', (req,res) => {
+  res.setHeader('Content-Type', 'application/json');
   if (!req.user) return res.send(JSON.stringify({status:'Unauthorized'}));
   res.send(JSON.stringify({status:'OK',
                            conversation: data.conversation(sender=req.user.username,target=req.query.username)
