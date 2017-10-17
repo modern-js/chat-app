@@ -1,11 +1,8 @@
 const faker = require('./faker');
+const convoData = require('./convoData');
 
 const getUsers = function() {
   return faker.userList; // leaving it like this unless I have time to make user registration
-}
-
-const getConvoAmong = function(A, B) {
-  return [];
 }
 
 const getUserForAuth = function(username, password) {
@@ -30,5 +27,6 @@ module.exports = {
   getUsers,
   getUser,
   getUserForAuth,
-  getConvoAmong
+  post: convoData.post,
+  conversation: convoData.conversation
 }
