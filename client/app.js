@@ -22,6 +22,7 @@ const withLogResponse = promise => (
   makeButton('convo', () => withLogResponse(window.api.convo({username:'Alex'}))),
   makeButton('seen', () => withLogResponse(window.api.seen({username:'Alex'}))),
   makeButton('notif', () => withLogResponse(window.api.notifications())),
+  makeButton('users', () => withLogResponse(window.api.users())),
   makeButton('post', () => withLogResponse(window.api.post({username:'Alex',text:'Example Message :)'}))),
   makeButton('Clean after me!', () => { output.innerHTML = ''; }),
 ].forEach(button => root.appendChild(button));

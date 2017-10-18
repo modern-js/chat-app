@@ -59,6 +59,10 @@ api.get('/convo', isAuthenticated, (req,res) => {
   res.json({conversation: data.conversation(sender=req.user.username,target=req.query.username), status:'OK'});
 });
 
+api.get('/users', isAuthenticated, (req,res) => {
+  res.json({list: data.getUsers(), status:'OK'});
+});
+
 api.post('/seen', isAuthenticated, (req,res) => {
   data.seen(target=req.user.username,sender=req.query.username);
   res.json({message:'marked as seen', status:'OK'});

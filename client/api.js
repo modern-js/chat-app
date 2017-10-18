@@ -26,6 +26,7 @@ const api = {
   convo: (query) => fetch('/convo', method='GET', query=query),
   seen: (query={username:'Alex'}) => fetch('/seen', method='POST', query=query),
   notifications: () => fetch('/notifications'),
+  users: () => fetch('/users'),
 }
 
 if (typeof module !== 'undefined') { module.exports = api; }
