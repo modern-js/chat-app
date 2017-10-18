@@ -1,5 +1,6 @@
 const api = require('express')();
 const session = require('express-session');
+const sessionstore = require('sessionstore');
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -13,61 +14,58 @@ passport.use(new LocalStrategy( function(name, pass, done) { return done(null, d
 api.use(session({
   secret: 'secret',
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: false,
+  cookie: { secure: false,  },
+  store: sessionstore.createSessionStore()
 }));
 api.use(passport.initialize());
 api.use(passport.session());
 
 
-api.get('/login',
-  passport.authenticate('local', { successRedirect: '/me',
-                                   failureRedirect: '/',
-                                   failureFlash: true })
-);
+api.post('/login', (req, res) => {
+  passport.authenticate('local', function (err, account) {
+                      req.logIn(account, function() {
+                        res.send(err ? err : account);
+                      });
+                    })(req,res);
+});
 
-api.get('/logout', (req, res) => {
+const isAuthenticated = function(req,res,next){
+   if(req.user)
+      return next();
+   else
+      return res.json({error: 'User not authenticated', status:'err'})
+}
+
+api.get('/check', isAuthenticated, function(req, res){
+    res.json({message: 'You are currently logged in!', status:'OK'});
+});
+
+api.get('/logout', isAuthenticated, (req, res) => {
   req.logout();
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({status:'OK'}));
+  res.json({message: 'Logged out!', status:'OK'});
 });
 
-api.get('/test',(req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({status:'OK'}));
+api.get('/me', isAuthenticated, (req, res) => {
+  res.json({'user':req.user, status:'OK'});
 });
 
-api.get('/me',(req, res) => {
-  res.setHeader('Content-Type', 'application/json');
-  if (!req.user) return res.send(JSON.stringify({status:'Unauthorized'}));;
-  res.send(JSON.stringify({'user':req.user, status:'OK'}));
-});
-
-api.post('/post', (req,res) => {
-  res.setHeader('Content-Type', 'application/json');
-  if (!req.user) return res.send(JSON.stringify({status:'Unauthorized'}));
+api.post('/post', isAuthenticated, (req,res) => {
   data.post(sender=req.user.username,target=req.query.username,message=req.query.text);
-  res.send(JSON.stringify({status:'OK'}));
+  res.json({message: 'Posted!', status:'OK'});
 });
 
-api.get('/convo', (req,res) => {
-  res.setHeader('Content-Type', 'application/json');
-  if (!req.user) return res.send(JSON.stringify({status:'Unauthorized'}));
-  res.send(JSON.stringify({status:'OK',
-                           conversation: data.conversation(sender=req.user.username,target=req.query.username)
-  }));
+api.get('/convo', isAuthenticated, (req,res) => {
+  res.json({conversation: data.conversation(sender=req.user.username,target=req.query.username), status:'OK'});
 });
 
-api.post('/seen', (req,res) => {
-  res.setHeader('Content-Type', 'application/json');
-  if (!req.user) return res.send(JSON.stringify({status:'Unauthorized'}));
+api.post('/seen', isAuthenticated, (req,res) => {
   data.seen(target=req.user.username,sender=req.query.username);
-  res.send(JSON.stringify({status:'OK'}));
+  res.json({message:'marked as seen', status:'OK'});
 });
 
-api.get('/notifications', (req,res) => {
-  res.setHeader('Content-Type', 'application/json');
-  if (!req.user) return res.send(JSON.stringify({status:'Unauthorized'}));
-  res.send(JSON.stringify({status:'OK', notifications: data.notifications(req.user.username)}));
+api.get('/notifications', isAuthenticated, (req,res) => {
+  res.json({notifications: data.notifications(req.user.username), status:'OK'});
 });
 
 module.exports = api;
