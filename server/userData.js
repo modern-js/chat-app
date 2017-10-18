@@ -1,4 +1,7 @@
+const touch = require('touch');
+
 const fakeUser = function(username, password='password') {
+  touch('./server/convos/'+username);
   return {
     username,
     password,
