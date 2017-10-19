@@ -1,17 +1,13 @@
 body {
-  padding: 20px 20px 20px 20px;
-}
-
-h1 {
-  color: red;
+  margin: 0; height: 100%; overflow: hidden
 }
 
 #users {
-  borer-size: 10px;
-  border-color: blue;
 }
 
 #convo_container {
-  border-size: 10px;
-  border-color: black;
+}
+
+#logout {
+  
 }

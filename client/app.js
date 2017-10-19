@@ -18,21 +18,24 @@ const populateUsers = function() {
         let conversation = x.conversation;
         let convo = document.getElementById('convo');
         convo.innerHTML = '';
+        if (conversation) if (conversation.length>5) conversation=conversation.slice(conversation.length - 5);
+
         for ( let j in conversation) {
           let message=conversation[j].message;
           let author=conversation[j].sender;
           let style="";
           if ( author==user.username ) style="'text-align:left;'";
                                   else style="'text-align:right;'";
-          let messageHTML="<div style="+style+">"+message+"</div>";
-          convo.innerHTML += messageHTML + '<br/>'
+          let messageHTML="<div class='well' style="+style+">"+message+"</div>";
+          convo.innerHTML += messageHTML// + '<hr>'
         }
 
         window.api.seen({username:user.username}).then(()=>{
-          setTimeout(function(){$('#user_'+user.username).css('color','black')},500);
+          setTimeout(mark_read(user.username),500);
         });
       });
       panel.appendChild(btn);
+      panel.appendChild(document.createElement('hr'));
     }
   });
 }
@@ -45,7 +48,7 @@ const listen = function() {
     for ( let i in notifs ) {
       let n=notifs[i];
       if ( n === RECEPIENT ) $('#user_'+RECEPIENT).click();
-                        else $('#user_'+n).css('color','red');
+                        else mark_unread(n);
     }
   });
 }
@@ -89,6 +92,16 @@ document.getElementById('logout').onclick = function(){
 document.getElementById('send').onclick = function(){
   let text = document.getElementById('input').value;
   window.api.post({username:RECEPIENT,text:text});
+}
+
+// visuals
+
+const mark_unread = function(username) {
+  $('#user_'+username).css('background-color','red');
+}
+
+const mark_read = function(username) {
+  $('#user_'+username).css('background-color','lightgrey');
 }
 
 const showForm = function() {

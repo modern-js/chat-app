@@ -8,7 +8,6 @@
   </head>
 
   <body>
-    <h1>Chat APP!</h1>
 
     <div id='login_form' class="container">
       <label><b>Username</b></label>
@@ -18,16 +17,21 @@
       <button id="login">Login</button>
     </div>
 
-    <div id="app">
-      <button id="logout">Logout</button>
-      <hr>
-      <div id="users" class="well"></div>
-      <div id="convo_container" class="well">
-        <div id="convo" class="well"></div>
-        <hr>
-        <input type="text" id="input">
-        <button id="send">Send</button>
-      </div>
+    <div id="app" class="row">
+
+        <div id="users" style="min-height: 100%" class="col-xs-2"></div>
+
+        <div id="convo_container" style="min-height: 100%" class="col-xs-9">
+          <div id="convo" class="well"></div>
+          <hr>
+          <input type="text" id="input">
+          <button id="send">Send</button>
+        </div>
+
+        <div style="min-height: 100%; float:right;" class="col-xs-1">
+          <button id="logout">Logout</button>
+        </div>
+
     </div>
 
     <script src="/app.js"></script>
