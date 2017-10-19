@@ -2,6 +2,9 @@
   <head>
     <link rel="stylesheet" href="/index.css" />
     <script src="/api.js"></script>
+    <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
+  	<link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
   </head>
 
   <body>
@@ -17,7 +20,14 @@
 
     <div id="app">
       <button id="logout">Logout</button>
-      
+      <hr>
+      <div id="users" class="well"></div>
+      <div id="convo_container" class="well">
+        <div id="convo" class="well"></div>
+        <hr>
+        <input type="text" id="input">
+        <button id="send">Send</button>
+      </div>
     </div>
 
     <script src="/app.js"></script>

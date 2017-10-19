@@ -1,49 +1,47 @@
+let RECEPIENT = '';
 
-const makeButton = (text, action) => {
-  const btn = document.createElement('button');
-  btn.textContent = text;
-  btn.onclick = action;
-  return btn;
-};
-
-const root = document.getElementById('app');
-
-const output = document.createElement('div');
-
-const withLogResponse = promise => (
-  promise.then(res => res.text()).then(body => {
-    output.innerHTML += body + '<br/>';
-  })
-);
-
-[
-  makeButton('Check', () => withLogResponse(window.api.check())),
-  makeButton('Me', () => withLogResponse(window.api.me())),
-  makeButton('Logout', () => withLogResponse(window.api.logout())),
-  makeButton('Login', () => withLogResponse(window.api.login({username:'Jimmy',password:'password'}))),
-  makeButton('convo', () => withLogResponse(window.api.convo({username:'Alex'}))),
-  makeButton('seen', () => withLogResponse(window.api.seen({username:'Alex'}))),
-  makeButton('notif', () => withLogResponse(window.api.notifications())),
-  makeButton('users', () => withLogResponse(window.api.users())),
-  makeButton('post', () => withLogResponse(window.api.post({username:'Alex',text:'Example Message :)'}))),
-  makeButton('Clean after me!', () => { output.innerHTML = ''; }),
-].forEach(button => root.appendChild(button));
-
-root.appendChild(output);
-
-
-// everything above this eventually needs to be deleted
+const populateUsers = function() {
+  window.api.users().then(x=>x.text()).then(x=>{
+    x = JSON.parse(x);
+    let users = x.list;
+    let panel = document.getElementById('users');
+    panel.innerHTML = '';
+    for (let i in users) {
+      let user = users[i];
+      let btn = document.createElement('button');
+      btn.textContent = user.username;
+      btn.onclick = () => window.api.convo({username:user.username}).then(x=>x.text()).then(x=>{
+        RECEPIENT = user.username;
+        x = JSON.parse(x);
+        let conversation = x.conversation;
+        let convo = document.getElementById('convo');
+        convo.innerHTML = '';
+        for ( let j in conversation) {
+          let message=conversation[j].message;
+          let author=conversation[j].sender;
+          let style="";
+          if ( author==user.username ) style="'text-align:left;'";
+                                  else style="'text-align:right;'";
+          let messageHTML="<div style="+style+">"+message+"</div>";
+          convo.innerHTML += messageHTML + '<br/>'
+        }
+      });
+      panel.appendChild(btn);
+    }
+  });
+}
 
 const mainLoop = function() {
   window.api.me().then(x=>x.text()).then(x=>{
     x = JSON.parse(x);
     if (x.status=='OK') {
       showApp();
+      populateUsers();
     }
     else {
       showForm();
     }
-    setTimeout(mainLoop, 1000);
+    setTimeout(mainLoop, 500);
   });
 };
 
@@ -57,6 +55,11 @@ document.getElementById('login').onclick = function(){
 
 document.getElementById('logout').onclick = function(){
   window.api.logout();
+}
+
+document.getElementById('send').onclick = function(){
+  let text = document.getElementById('input').value;
+  window.api.post({username:RECEPIENT,text:text});
 }
 
 const showForm = function() {
