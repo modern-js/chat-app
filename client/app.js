@@ -36,7 +36,6 @@ const mainLoop = function() {
     x = JSON.parse(x);
     if (x.status=='OK') {
       showApp();
-      populateUsers();
     }
     else {
       showForm();
@@ -45,12 +44,22 @@ const mainLoop = function() {
   });
 };
 
-document.addEventListener("DOMContentLoaded", mainLoop);
+const startUp = function() {
+  window.api.me().then(x=>x.text()).then(x=>{
+    x = JSON.parse(x);
+    if (x.status=='OK') {
+      populateUsers();
+    }
+  });
+  mainLoop();
+}
+
+document.addEventListener("DOMContentLoaded", startUp);
 
 document.getElementById('login').onclick = function(){
   let username = document.getElementById('user_text').value;
   let password = document.getElementById('pass_text').value;
-  window.api.login({username:username,password:password});
+  window.api.login({username:username,password:password}).then(()=>{populateUsers();});
 }
 
 document.getElementById('logout').onclick = function(){
