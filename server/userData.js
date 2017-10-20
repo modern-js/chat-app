@@ -11,8 +11,9 @@ const fakeUser = function(username, password='password') {
 
 const fakeUserList = [
   fakeUser('Jimmy'),
-  fakeUser('Alex','secret'),
-  fakeUser('George')
+  fakeUser('Alex'),
+  fakeUser('George'),
+  fakeUser('Rati')
 ];
 
 module.exports = {
