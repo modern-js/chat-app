@@ -18,15 +18,15 @@ const populateUsers = function() {
         let conversation = x.conversation;
         let convo = document.getElementById('convo');
         convo.innerHTML = '';
-        if (conversation) if (conversation.length>5) conversation=conversation.slice(conversation.length - 5);
+        if (conversation) if (conversation.length>6) conversation=conversation.slice(conversation.length - 6);
 
         for ( let j in conversation) {
           let message=conversation[j].message;
           let author=conversation[j].sender;
           let style="";
-          if ( author==user.username ) style="'text-align:left;'";
-                                  else style="'text-align:right;'";
-          let messageHTML="<div class='well' style="+style+">"+message+"</div>";
+          if ( author==user.username ) style="'text-align:left;background-color:lightgreen'";
+                                  else style="'text-align:right;background-color:lightblue'";
+          let messageHTML="<div class='well message' style="+style+">"+message+"</div>";
           convo.innerHTML += messageHTML// + '<hr>'
         }
 
@@ -34,6 +34,7 @@ const populateUsers = function() {
           setTimeout(mark_read(user.username),500);
         });
       });
+      btn.className += 'btn btn-success';
       panel.appendChild(btn);
       panel.appendChild(document.createElement('hr'));
     }
@@ -59,6 +60,8 @@ const mainLoop = function() {
     if (x.status=='OK') {
       showApp();
       listen();
+      $('#logout').html('Logout ['+x.user.username+']');
+      $('#input').attr("placeholder","message "+RECEPIENT);
     }
     else {
       showForm();
@@ -89,19 +92,21 @@ document.getElementById('logout').onclick = function(){
   window.api.logout();
 }
 
-document.getElementById('send').onclick = function(){
+$('#input_form').on('submit', function(e) {
+  e.preventDefault();
   let text = document.getElementById('input').value;
+  document.getElementById('input').value='';
   window.api.post({username:RECEPIENT,text:text});
-}
+});
 
 // visuals
 
 const mark_unread = function(username) {
-  $('#user_'+username).css('background-color','red');
+  $('#user_'+username).css('background-color','orange');
 }
 
 const mark_read = function(username) {
-  $('#user_'+username).css('background-color','lightgrey');
+  $('#user_'+username).css('background-color','');
 }
 
 const showForm = function() {

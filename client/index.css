@@ -9,5 +9,14 @@ body {
 }
 
 #logout {
-  
+
+}
+
+.btn .btn-success{
+  height: 8%;
+  background-color: lightgreen;
+}
+
+.message {
+
 }
